@@ -26,7 +26,7 @@ module Ppcs::ScraperBase
 
   def scrape_resource path
     puts "downloading #{uri(path)}"
-    WebResource.scrape(uri(path), @result.commit_result) do |text|
+    WebResource.scrape(uri(path)) do |text|
       remove_variable_content text
     end
   end
