@@ -10,22 +10,24 @@ class Ppcs::LabourParse
   end
 
   def populate_ppc doc, ppc, file
-    div = doc.at('div[@class="main_news_content"]')
+    div = doc.at('div.main_news_content')
     if div
-      ppc.name = div.at('h1').inner_text.sub(/^Councillor /,'')
-
       parts = div.at('td[2]').inner_html
       text = parts.to_s.sub('PPC for Orkney<br />PPC for Shetland', 'PPC for Orkney and Shetland')
-      ppc_for = text[/PPC for ([^<]+)</,1]
 
-      ppc.constituency = ppc_for
-      ppc.mp_for = get_mp_for(text, file)
-      set_image ppc, doc.at('div[@class="main_news_content_text"]').at('td/img'), "http://www.labour.org.uk/"
-
-      add_attributes doc, ppc unless (ppc.respond_to?(:mp_for) && ppc.mp_for)
-
-      ppc.twfy_party = 'Labour'
-      ppc
+      if ppc_for = text[/PPC for ([^<]+)</,1]
+        ppc.name = div.at('h1').inner_text.sub(/^Councillor /,'')
+        ppc.constituency = ppc_for
+        ppc.mp_for = get_mp_for(text, file)
+        set_image ppc, doc.at('div[@class="main_news_content_text"]').at('td/img'), "http://www.labour.org.uk/"
+  
+        add_attributes doc, ppc unless (ppc.respond_to?(:mp_for) && ppc.mp_for)
+  
+        ppc.twfy_party = 'Labour'
+        ppc
+      else
+        nil
+      end
     else
       nil
     end

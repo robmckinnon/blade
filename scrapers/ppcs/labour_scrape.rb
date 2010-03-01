@@ -28,7 +28,7 @@ class Ppcs::LabourScrape
 
   def scrape_new_ppc uri_path
     resource = scrape_resource(uri_path)
-    @result.add resource
+    @result.add_resource resource
   end
 
   def scrape_restanding_mp uri_path
@@ -39,7 +39,7 @@ class Ppcs::LabourScrape
       parts = div.at('td[2]').inner_html
       text = parts.to_s.sub('PPC for Orkney<br />PPC for Shetland','PPC for Orkney and Shetland')
       if ppc_for = text[/PPC for ([^<]+)</,1]
-        @result.add resource
+        @result.add_resource resource
       end
     end
   end

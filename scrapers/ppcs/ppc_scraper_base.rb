@@ -17,7 +17,7 @@ module Ppcs::ScraperBase
     ppc_links do |link|
       resource = scrape_ppc(link['href'])
       if resource
-        @result.add resource
+        @result.add_resource resource
       else
         @no_constituency << link
       end
@@ -26,7 +26,7 @@ module Ppcs::ScraperBase
 
   def scrape_resource path
     puts "downloading #{uri(path)}"
-    WebResource.scrape(uri(path)) do |text|
+    resource = WebResource.scrape(uri(path), @result) do |text|
       remove_variable_content text
     end
   end
