@@ -15,7 +15,8 @@ module Ppcs::ScraperBase
 
   def scrape_ppcs
     ppc_links do |link|
-      resource = scrape_ppc(link['href'])
+      uri_path = link['href']
+      resource = scrape_ppc(uri_path)
       if resource
         @result.add_resource resource
       else

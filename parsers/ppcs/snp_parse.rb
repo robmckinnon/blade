@@ -1,5 +1,3 @@
-require '../ppc.rb'
-
 require File.expand_path(File.dirname(__FILE__) + '/ppc_parser_base')
 
 class Ppcs::SnpParse

@@ -5,13 +5,13 @@ class Ppcs::LibdemScrape
   include Ppcs::ScraperBase
 
   def uri path
-    uri = "http://libdems.org.uk/#{uri}"
+    uri = "http://libdems.org.uk/#{path}"
   end
 
   def remove_variable_content text
   end
 
-  def scrape_ppc ppc_link
+  def scrape_ppc uri_path
     resource = scrape_resource(uri_path)
     doc = resource.hpricot_doc
     heading = doc.at('#divHeading/h1').inner_text
@@ -44,12 +44,13 @@ class Ppcs::LibdemScrape
     resource = scrape_resource(path)
     doc = resource.hpricot_doc
     pages = (doc/'option').collect{|x| x['value']}.compact.select{|x| x[/parliamentary_candidates\.aspx\?show/] }
-    
+
     pages.each do |page|
-      puts page
       resource = scrape_resource(page)
-      links = resource.links.select{|a| a['href'] && a['href'][/parliamentary_candidates_detail\.aspx\?name/] }
-      links = links.select{|a| !a.inner_text.blank? && a.inner_text != 'Image'}.collect{|a| a['href']}.uniq
+      links = resource.links
+      links = links.select{|a| a['href'] && a['href'][/parliamentary_candidates_detail\.aspx\?name/] }
+      links = links.select{|a| !a.inner_text.blank? && a.inner_text != 'Image'}
+      links = links.group_by{|a| a['href']}.values.collect {|list| list.first}
       links.each {|link| yield link}
     end
   end
