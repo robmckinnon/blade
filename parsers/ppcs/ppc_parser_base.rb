@@ -41,7 +41,7 @@ module Ppcs::ParserBase
       parse_resource resource, ppcs, not_processed
     end
     log_not_processed not_processed
-    save_mps_info
+    save_mps_info ppcs
     ppcs = check_one_ppc_per_constituency(ppcs)
 
     @attributes ||= nil
@@ -257,7 +257,7 @@ module Ppcs::ParserBase
   end
 
   def twfy
-    @twfy_key ||= open(File.expand_path(File.dirname(__FILE__)+ '/twfy_key.txt')).read.strip
+    @twfy_key ||= open(File.expand_path(RAILS_ROOT+ '/config/twfy_key.txt')).read.strip
     @twfy ||= Twfy::Client.new(@twfy_key)
     @twfy
   end
